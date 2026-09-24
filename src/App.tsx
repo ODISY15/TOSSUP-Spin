@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, Heart, LockKeyhole, Moon, Plus, RotateCcw, Save, Settings2, Shuffle, Sparkles, Sun, Trash2, Volume2, X } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 import supabase from './lib/supabase';
 import { signInWithGoogle, handleGoogleRedirect } from './lib/googleAuth';
 import { playTick, playWin, type SoundMode } from './lib/sound';
@@ -337,6 +338,7 @@ function App() {
       <h3>Random results and availability</h3><p>Spins are for casual decisions and entertainment, not gambling, financial, medical, legal or other high-stakes decisions. We do not guarantee a particular result, uninterrupted access, or that stored data will always be available. You remain responsible for decisions made using the site.</p>
       <h3>Optional newsletter and monetization</h3><p>Joining the beehiiv newsletter is optional and separate from account creation. Newsletter emails may contain ads, sponsorships or partner offers. No purchase is required to spin or save eligible presets. You can unsubscribe using the link in a newsletter without deleting your Tossup account. Ad placements on the website may help fund the service. We may update the service and these terms; continued use after updates means you accept the revised terms.</p>
     </div>}<button className="auth-submit" onClick={() => setLegalOpen(null)}>Close <Check size={17}/></button></div></div>}
+    <Analytics />
   </div>;
 }
 export default App;
