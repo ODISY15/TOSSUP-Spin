@@ -6,7 +6,7 @@ export type ResultMessage = { id: number; message: string; animation: string };
 
 const photo = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=2200&q=85`;
 const six = (ids: string[]) => ids.map(photo);
-const makeVariants = (name: string, base: string, end: string, ink: string, surface: string, colors: string[]) => Array.from({ length: 6 }, (_, index) => ({ name: `${name} ${index + 1}`, base, end, ink, surface, colors }));
+const makeVariants = (name: string, base: string, end: string, ink: string, surface: string, colors: string[]): Variant[] => Array.from({ length: 6 }, (_, index) => ({ name: `${name} ${index + 1}`, base, end, ink, surface, colors }));
 
 const photoSets: Record<string, string[]> = {
   sunroom: six(['photo-1500534623283-312aade485b7', 'photo-1506744038136-46273834b3fb', 'photo-1500530855697-b586d89ba3ee', 'photo-1497250681960-ef046c08a56e', 'photo-1507525428034-b723cf961d3e', 'photo-1518837695005-2083093ee35b']),
@@ -21,7 +21,8 @@ const photoSets: Record<string, string[]> = {
   dusk: six(['photo-1500530855697-b586d89ba3ee', 'photo-1500534623283-312aade485b7', 'photo-1499346030926-9a72daac6c63', 'photo-1470252649378-9c29740c9fa8', 'photo-1497435334941-8c899ee9e8e9', 'photo-1470770841072-f978cf4d019e']),
 };
 
-const seeds = [
+type ThemeSeed = readonly [string, string, string, string, string, string, string, readonly string[]];
+const seeds: ThemeSeed[] = [
   ['sunroom', 'Sunroom', '☀', '#fff1bf', '#d66c58', '#172622', '#fffaf0', ['#f5bd63', '#ef886b', '#78b8a7', '#e7d38d']],
   ['terra', 'Terra', '◒', '#f5c1a7', '#713f4f', '#352523', '#fff7f0', ['#c96954', '#e2a06f', '#8f5960', '#e4c18e']],
   ['aurora', 'Aurora', '✦', '#d8f3ff', '#6a7cff', '#172935', '#f4fbff', ['#8ed8ff', '#7f9cff', '#90d9c9', '#f7d98d']],
@@ -32,10 +33,10 @@ const seeds = [
   ['midnight', 'Midnight', '✹', '#111a2a', '#2f4d78', '#edf5ff', '#121d2f', ['#4a7de0', '#86baf6', '#4cc9b0', '#b7d2ff']],
   ['rose', 'Rose', '✿', '#ffdfe9', '#a64d7d', '#2c1821', '#fff6fb', ['#ff9db7', '#f28ca7', '#c28df2', '#ffd5a1']],
   ['dusk', 'Dusk', '✺', '#f7d6b2', '#5b457c', '#261c2e', '#fff5ec', ['#f3b87d', '#d78d8d', '#7f6be1', '#f7dba2']],
-] as const;
+];
 
-export const themeCatalog: Theme[] = seeds.map(([slug, name, symbol, base, end, ink, surface, colors], index) => ({ id: index + 1, slug, name, symbol, variants: makeVariants(name, base, end, ink, surface, colors), backgrounds: photoSets[slug] }));
+export const themeCatalog: Theme[] = seeds.map(([slug, name, symbol, base, end, ink, surface, colors], index) => ({ id: index + 1, slug, name, symbol, variants: makeVariants(name, base, end, ink, surface, [...colors]), backgrounds: photoSets[slug] ?? photoSets.sunroom }));
 export const suggestionCatalog: Suggestion[] = ['Coffee', 'Tea', 'Take a walk', 'Watch a movie', 'Cook dinner', 'Read', 'Call a friend', 'Stay home'].map((label, id) => ({ id: id + 1, label }));
 export const optionCollections: Collection[] = [];
 export const resultMessages: ResultMessage[] = [{ id: 1, message: 'Trust your first instinct.', animation: 'jackpot' }, { id: 2, message: 'That sounds like a plan.', animation: 'bounce' }];
-export const backgroundFor = (themeSlug: string, variantIndex: number, _appearance: 'light' | 'dark') => { const theme = themeCatalog.find(item => item.slug === themeSlug) || themeCatalog[0]; return theme.backgrounds[Math.abs(variantIndex) % theme.backgrounds.length]; };
+export const backgroundFor = (themeSlug: string, variantIndex: number, _appearance: 'light' | 'dark') => { const theme = themeCatalog.find(item => item.slug === themeSlug) ?? themeCatalog[0]; return theme.backgrounds[Math.abs(variantIndex) % theme.backgrounds.length]; };
